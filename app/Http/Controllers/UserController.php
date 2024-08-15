@@ -25,4 +25,25 @@ class UserController extends Controller
         ]);
 
     }
+
+    public function userLogin(Request $request): JsonResponse
+    {
+        $request->validate([]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'user' => $user,
+        ]);
+
+
+    }
 }
