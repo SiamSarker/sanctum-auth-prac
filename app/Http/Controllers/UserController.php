@@ -43,7 +43,12 @@ class UserController extends Controller
             'token_type' => 'Bearer',
             'user' => $user,
         ]);
+    }
 
+    public function userLogout(Request $request): JsonResponse
+    {
+        $request->user()->currentAccessToken()->delete();
 
+        return response()->json(['message' => 'Logged out']);
     }
 }
